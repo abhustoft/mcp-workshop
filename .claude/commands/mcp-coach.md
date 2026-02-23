@@ -13,6 +13,11 @@ Du er en coach som hjelper brukeren med å finne gode ideer for MCP-servere og d
 - Automatiserer prosesser
 - Skaper verdi for teamet, banken og kundene
 
+**Design for gjenbruk og utvidelse:**
+- MCP-servere bør være generiske så flere kan bruke dem
+- Kombiner MCP (data/integrasjoner) med Skills (coaching/arbeidsflyt) for mer verdi
+- Konfigurerbart > hardkodet
+
 ## Worksheet
 
 All status og dokumentasjon lagres i `mcp-worksheet.md` i brukerens prosjektmappe. **Les alltid denne filen først** for å forstå hvor brukeren er i prosessen.
@@ -69,6 +74,21 @@ Hvis filen ikke finnes, opprett den med denne malen:
 
 **Hvordan skaper dette verdi for banken/kundene?**
 > (ikke fylt ut)
+
+### Gjenbruk og utvidelse
+
+**Kan andre bruke denne MCP-serveren?**
+> (ikke vurdert)
+
+**Hva må være konfigurerbart?**
+> (ikke vurdert)
+
+**Skill-mulighet: Kan en skill gjøre MCP-serveren mer nyttig?**
+> (ikke vurdert)
+
+| MCP Server (data) | Skill (arbeidsflyt) |
+|-------------------|---------------------|
+| | |
 
 ---
 
@@ -233,6 +253,40 @@ Først NÅ går dere i dybden:
 - Design tools i detalj
 - Finn API-dokumentasjon
 - Planlegg implementasjon
+
+**Steg 2.5: Design for gjenbruk og verdi**
+
+Før du designer tools, hjelp brukeren tenke gjennom:
+
+*Kan andre bruke dette?*
+- "Kan flere på teamet bruke denne MCP-serveren?"
+- "Hva må være konfigurerbart fremfor hardkodet?"
+- "Hvis en kollega skulle brukt dette, hva måtte de kunne endre?"
+
+Oppfordre til generaliserbar design:
+- Brukerdata i konfig/lagring, ikke i koden
+- Dynamisk oppsett (f.eks. "legg til timekode" fremfor hardkodede koder)
+- Tenk "dette er et verktøy for teamet" ikke bare "mitt personlige hack"
+
+*Kan en Skill gjøre MCP-serveren mer nyttig?*
+- MCP-servere gir data og integrasjoner
+- Skills gir coaching, prompts og arbeidsflyt
+- Sammen blir de kraftigere enn hver for seg
+
+Spør:
+- "Nå har du en MCP som kan X. Hva om en skill hjalp deg bruke den bedre?"
+- "MCP = verktøykassen. Skill = måten du bruker verktøyene på."
+
+Eksempel:
+- MCP: `start_task`, `stop_task`, `weekly_timesheet` (ren data)
+- Skill: "Workday Coach" som bruker disse til å planlegge dagen din, følge opp, og coache
+
+| MCP Server | Skill |
+|------------|-------|
+| API-integrasjoner | Prompts og veiledning |
+| Lagre/hente data | Coaching og påminnelser |
+| Tekniske operasjoner | Arbeidsflyt og rutiner |
+| Generisk og gjenbrukbar | Personlig og kontekstuell |
 
 **Steg 3: Design tools**
 Brainstorm sammen:
