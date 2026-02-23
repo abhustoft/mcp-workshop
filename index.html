@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Server Workshop</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --fjell: #002776;
+      --vann: #005aa4;
+      --frost: #7eb5d2;
+      --sand: #f8e9dd;
+      --myrull: #fae4e0;
+      --syrin: #d3d3ea;
+      --nordlys: #33af85;
+      --skog: #00754e;
+      --multe: #f8b181;
+      --sol: #dc8000;
+      --baer: #db3335;
+      --villblomst: #ee8d9c;
+      --black: #020a0a;
+      --gray-dark: #676767;
+      --gray: #adadad;
+      --gray-light: #d8d8d8;
+      --white: #fff;
+
+      --bg: var(--fjell);
+      --surface: #001a52;
+      --border: #003a8c;
+      --text: var(--white);
+      --text-muted: var(--frost);
+      --accent: var(--frost);
+      --heading: var(--sand);
+      --strong: var(--sand);
+      --code-bg: #001340;
+      --success: var(--nordlys);
+      --blockquote-border: var(--multe);
+      --blockquote-bg: rgba(248, 177, 129, 0.08);
+      --nav-hover-bg: rgba(126, 181, 210, 0.12);
+      --nav-hover-color: var(--sand);
+    }
+
+    body.light {
+      --bg: var(--white);
+      --surface: var(--sand);
+      --border: var(--gray-light);
+      --text: var(--black);
+      --text-muted: var(--gray-dark);
+      --accent: var(--vann);
+      --heading: var(--fjell);
+      --strong: var(--fjell);
+      --code-bg: #f1f5f9;
+      --success: var(--skog);
+      --blockquote-border: var(--vann);
+      --blockquote-bg: rgba(0, 90, 164, 0.05);
+      --nav-hover-bg: rgba(0, 39, 118, 0.08);
+      --nav-hover-color: var(--fjell);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* --- NAV --- */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px;
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .nav h1 {
+      font-size: 1rem;
+      padding: 0 1.25rem 1rem;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.75rem;
+    }
+
+    .nav a {
+      display: block;
+      padding: 0.5rem 1.25rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.15s;
+    }
+
+    .nav a:hover, .nav a.active {
+      color: var(--nav-hover-color);
+      background: var(--nav-hover-bg);
+    }
+
+    .nav .hint {
+      padding: 1rem 1.25rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 0.75rem;
+    }
+
+    .nav .hint kbd {
+      background: var(--border);
+      padding: 0.1em 0.4em;
+      border-radius: 3px;
+      font-size: 0.85em;
+    }
+
+    /* --- CONTENT --- */
+    .content {
+      margin-left: 260px;
+      padding: 3rem 4rem;
+      max-width: 960px;
+    }
+
+    .content h1 { font-size: 2rem; margin: 2rem 0 1rem; color: var(--heading); }
+    .content h2 { font-size: 1.5rem; margin: 2rem 0 0.75rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; }
+    .content h3 { font-size: 1.15rem; margin: 1.5rem 0 0.5rem; color: var(--text); }
+    .content p { margin: 0.75rem 0; }
+    .content ul, .content ol { margin: 0.5rem 0 0.5rem 1.5rem; }
+    .content li { margin: 0.25rem 0; }
+    .content hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+    .content a { color: var(--accent); text-decoration: none; }
+    .content a:hover { text-decoration: underline; }
+
+    .content strong { color: var(--strong); }
+
+    .content code {
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.9em;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    .content pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    .content pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    .content th, .content td {
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    .content th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+
+    .content blockquote {
+      border-left: 3px solid var(--blockquote-border);
+      padding: 0.5rem 1rem;
+      margin: 1rem 0;
+      background: var(--blockquote-bg);
+      border-radius: 0 6px 6px 0;
+    }
+
+    /* --- PRESENTATION MODE --- */
+    body.presenting .nav,
+    body.presenting .content {
+      display: none;
+    }
+
+    .slides-container {
+      display: none;
+    }
+
+    body.presenting .slides-container {
+      display: block;
+    }
+
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      padding: 4rem 6rem;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .slide h1 {
+      font-size: 2.8rem;
+      color: var(--heading);
+      margin-bottom: 1.5rem;
+    }
+
+    .slide h2 {
+      font-size: 2.2rem;
+      color: var(--heading);
+      margin-bottom: 1.2rem;
+    }
+
+    .slide h3 {
+      font-size: 1.4rem;
+      color: var(--text);
+      margin: 1rem 0 0.5rem;
+    }
+
+    .slide p, .slide li {
+      font-size: 1.3rem;
+      line-height: 1.8;
+    }
+
+    .slide ul, .slide ol {
+      margin-left: 1.5rem;
+    }
+
+    .slide li {
+      margin: 0.4rem 0;
+    }
+
+    .slide pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+
+    .slide pre code {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .slide code {
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    }
+
+    .slide table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 1.1rem;
+    }
+
+    .slide th, .slide td {
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    .slide th {
+      background: var(--surface);
+    }
+
+    .slide blockquote {
+      border-left: 3px solid var(--blockquote-border);
+      padding: 0.5rem 1.2rem;
+      margin: 1rem 0;
+      background: var(--blockquote-bg);
+      border-radius: 0 6px 6px 0;
+      font-size: 1.2rem;
+    }
+
+    .slide strong { color: var(--strong); }
+    .slide a { color: var(--accent); text-decoration: none; }
+
+    /* Slide counter */
+    .slide-counter {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      z-index: 200;
+      display: none;
+    }
+
+    body.presenting .slide-counter {
+      display: block;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--vann);
+      transition: width 0.3s;
+      z-index: 200;
+      display: none;
+    }
+
+    body.presenting .progress-bar {
+      display: block;
+    }
+
+    /* Doc title in presentation */
+    .slide-doc-title {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      z-index: 200;
+      display: none;
+    }
+
+    body.presenting .slide-doc-title {
+      display: block;
+    }
+
+    /* --- THEME TOGGLE --- */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 300;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      line-height: 1;
+    }
+
+    .theme-toggle:hover {
+      color: var(--heading);
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" id="theme-toggle" title="Bytt tema (T)">&#9790;</button>
+
+  <nav class="nav">
+    <h1>MCP Workshop</h1>
+    <div id="nav-links"></div>
+    <div class="hint">
+      <kbd>P</kbd> Presentasjon<br>
+      <kbd>Esc</kbd> Avslutt<br>
+      <kbd>&larr;</kbd> <kbd>&rarr;</kbd> Navigering<br>
+      <kbd>T</kbd> Bytt tema
+    </div>
+  </nav>
+
+  <main class="content" id="content"></main>
+
+  <div class="slides-container" id="slides-container"></div>
+  <div class="slide-counter" id="slide-counter"></div>
+  <div class="slide-doc-title" id="slide-doc-title"></div>
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <script>
+    const docs = [
+      { file: 'README.md', title: 'Oversikt' },
+      { file: 'INTRO.md', title: 'Intro: Hva er MCP?' },
+      { file: 'BRAINSTORMING.md', title: 'Brainstorming' },
+      { file: 'OPPGAVER.md', title: 'Oppgaver' },
+      { file: 'MCP-INSPECTOR.md', title: 'MCP Inspector' },
+      { file: 'CLAUDE-OPPSETT.md', title: 'Claude-oppsett' },
+      { file: 'OPPGAVEFORSLAG.md', title: 'Fasilitator-guide' },
+    ];
+
+    let allSlides = [];
+    let currentSlide = 0;
+    let presenting = false;
+    let loadedDocs = {};
+
+    async function loadDoc(doc) {
+      const resp = await fetch(doc.file);
+      const md = await resp.text();
+      loadedDocs[doc.file] = md;
+      return md;
+    }
+
+    async function init() {
+      await Promise.all(docs.map(loadDoc));
+      buildNav();
+      showDoc(docs[0].file);
+      buildSlides();
+    }
+
+    function buildNav() {
+      const nav = document.getElementById('nav-links');
+      docs.forEach(doc => {
+        const a = document.createElement('a');
+        a.textContent = doc.title;
+        a.href = '#';
+        a.dataset.file = doc.file;
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          showDoc(doc.file);
+        });
+        nav.appendChild(a);
+      });
+    }
+
+    function showDoc(file) {
+      const md = loadedDocs[file];
+      document.getElementById('content').innerHTML = marked.parse(md);
+      document.querySelectorAll('.nav a').forEach(a => {
+        a.classList.toggle('active', a.dataset.file === file);
+      });
+    }
+
+    function buildSlides() {
+      allSlides = [];
+      const container = document.getElementById('slides-container');
+      container.innerHTML = '';
+
+      docs.forEach(doc => {
+        const md = loadedDocs[doc.file];
+        // Split on ## headings (keep heading with content)
+        const sections = md.split(/^(?=## )/m);
+
+        sections.forEach(section => {
+          const trimmed = section.trim();
+          if (!trimmed) return;
+
+          // Further split on --- (horizontal rules) within sections
+          const subsections = trimmed.split(/\n---\n/);
+
+          subsections.forEach(sub => {
+            const subTrimmed = sub.trim();
+            if (!subTrimmed) return;
+
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.dataset.docTitle = doc.title;
+
+            const inner = document.createElement('div');
+            inner.className = 'slide-inner';
+            inner.innerHTML = marked.parse(subTrimmed);
+            slide.appendChild(inner);
+
+            container.appendChild(slide);
+            allSlides.push(slide);
+          });
+        });
+      });
+    }
+
+    function enterPresentation() {
+      if (presenting) return;
+      presenting = true;
+      currentSlide = 0;
+      document.body.classList.add('presenting');
+      updateSlide();
+    }
+
+    function exitPresentation() {
+      if (!presenting) return;
+      presenting = false;
+      document.body.classList.remove('presenting');
+    }
+
+    function updateSlide() {
+      allSlides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+      const counter = document.getElementById('slide-counter');
+      counter.textContent = `${currentSlide + 1} / ${allSlides.length}`;
+      const progress = document.getElementById('progress-bar');
+      progress.style.width = `${((currentSlide + 1) / allSlides.length) * 100}%`;
+      const docTitle = document.getElementById('slide-doc-title');
+      docTitle.textContent = allSlides[currentSlide]?.dataset.docTitle || '';
+    }
+
+    function nextSlide() {
+      if (currentSlide < allSlides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    // --- Theme ---
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      const isLight = document.body.classList.contains('light');
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+      document.getElementById('theme-toggle').innerHTML = isLight ? '&#9728;' : '&#9790;';
+    }
+
+    function loadTheme() {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light') {
+        document.body.classList.add('light');
+        document.getElementById('theme-toggle').innerHTML = '&#9728;';
+      }
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+    document.addEventListener('keydown', e => {
+      if ((e.key === 't' || e.key === 'T') && e.target === document.body && !presenting) {
+        e.preventDefault();
+        toggleTheme();
+      }
+
+      if (e.key === 'p' || e.key === 'P') {
+        if (!presenting && e.target === document.body) {
+          e.preventDefault();
+          enterPresentation();
+        }
+      }
+
+      if (e.key === 'Escape') {
+        exitPresentation();
+      }
+
+      if (presenting) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+          e.preventDefault();
+          nextSlide();
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          prevSlide();
+        }
+      }
+    });
+
+    loadTheme();
+    init();
+  </script>
+</body>
+</html>
