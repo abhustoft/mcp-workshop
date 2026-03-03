@@ -400,6 +400,10 @@
   <div class="progress-bar" id="progress-bar"></div>
 
   <script>
+    // ---- ENDRE STARTTIDSPUNKT HER ----
+    const WORKSHOP_START = '14:30';
+    // ------------------------------------
+
     const docs = [
       { file: 'README.md', title: 'Oversikt' },
       { file: 'INTRO.md', title: 'Intro: Hva er MCP?' },
@@ -444,9 +448,28 @@
       });
     }
 
+    function addMinutes(timeStr, minutes) {
+      const [h, m] = timeStr.split(':').map(Number);
+      const total = h * 60 + m + minutes;
+      return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+    }
+
+    function convertAgendaTimes(container) {
+      container.querySelectorAll('td').forEach(td => {
+        const match = td.textContent.match(/^(\d+)-(\d+)\s*min$/);
+        if (match) {
+          const from = addMinutes(WORKSHOP_START, parseInt(match[1]));
+          const to = addMinutes(WORKSHOP_START, parseInt(match[2]));
+          td.textContent = `${from}–${to}`;
+        }
+      });
+    }
+
     function showDoc(file) {
       const md = loadedDocs[file];
-      document.getElementById('content').innerHTML = marked.parse(md);
+      const el = document.getElementById('content');
+      el.innerHTML = marked.parse(md);
+      convertAgendaTimes(el);
       document.querySelectorAll('.nav a').forEach(a => {
         a.classList.toggle('active', a.dataset.file === file);
       });
@@ -482,6 +505,7 @@
             inner.innerHTML = marked.parse(subTrimmed);
             slide.appendChild(inner);
 
+            convertAgendaTimes(inner);
             container.appendChild(slide);
             allSlides.push(slide);
           });

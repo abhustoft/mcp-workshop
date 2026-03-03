@@ -7,7 +7,7 @@ MCP Inspector er et debugging-verktøy som lar deg teste MCP-serveren din uten �
 Inspector kjøres via npx (ingen installasjon nødvendig):
 
 ```bash
-npx @anthropic-ai/mcp-inspector
+npx @modelcontextprotocol/inspector
 ```
 
 ## Bruk
@@ -16,12 +16,12 @@ npx @anthropic-ai/mcp-inspector
 
 ```bash
 # Node.js server
-npx @anthropic-ai/mcp-inspector node examples/node-mcp-server/index.js
+npx @modelcontextprotocol/inspector node examples/node-mcp-server/index.js
 
 # Kotlin server (etter bygging)
 cd examples/kotlin-mcp-server
 ./gradlew bootJar
-npx @anthropic-ai/mcp-inspector java -jar build/libs/mcp-server.jar
+npx @modelcontextprotocol/inspector java -jar build/libs/mcp-server.jar
 ```
 
 ### Hva du kan gjøre i Inspector
@@ -48,14 +48,17 @@ npx @anthropic-ai/mcp-inspector java -jar build/libs/mcp-server.jar
 ## Vanlige feil og løsninger
 
 ### "Server did not respond to initialize"
+
 - Sjekk at serveren skriver til stdout (ikke stderr for data)
 - Sjekk at JSON er gyldig
 
 ### "Tool not found"
+
 - Verifiser at tool er registrert i tools/list responsen
 - Sjekk stavefeil i tool-navn
 
 ### "Invalid arguments"
+
 - Sjekk at input-schema matcher det du sender inn
 - Verifiser at required-felter er fylt ut
 

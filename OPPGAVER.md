@@ -1,4 +1,4 @@
-# Workshop-oppgaver (30 min)
+# Workshop-oppgaver
 
 Velg enten Node.js eller Kotlin basert på hva du er mest komfortabel med.
 
@@ -25,6 +25,7 @@ claude "les examples/kotlin-mcp-server og forklar strukturen"
 Utvid eksempel-serveren med en ny tool. Velg én:
 
 ### Alternativ A: `get_joke` tool
+
 En tool som returnerer en tilfeldig vits.
 
 ```bash
@@ -32,6 +33,7 @@ claude "legg til en get_joke tool i MCP-serveren som returnerer en tilfeldig vit
 ```
 
 ### Alternativ B: `translate` tool
+
 En tool som "oversetter" tekst (simulert).
 
 ```bash
@@ -39,6 +41,7 @@ claude "legg til en translate tool som tar tekst og målspråk som input"
 ```
 
 ### Alternativ C: Din egen idé
+
 ```bash
 claude "legg til en [beskriv din tool] i MCP-serveren"
 ```
@@ -50,7 +53,9 @@ claude "legg til en [beskriv din tool] i MCP-serveren"
 Nå skal du lage en MCP-server som wrapper et ekte API.
 
 ### Steg 1: Velg et API
+
 Eksempler:
+
 - Yr.no API (vær)
 - Wikipedia API
 - GitHub API
@@ -68,10 +73,10 @@ claude "her er API-dokumentasjonen for [API-navn]: [lim inn eller pek på URL]
 
 ```bash
 # Node.js
-npx @anthropic-ai/mcp-inspector node din-server.js
+npx @modelcontextprotocol/inspector node din-server.js
 
 # Kotlin
-npx @anthropic-ai/mcp-inspector java -jar build/libs/mcp-server.jar
+npx @modelcontextprotocol/inspector java -jar build/libs/mcp-server.jar
 ```
 
 ---

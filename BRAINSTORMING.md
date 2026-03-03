@@ -1,4 +1,6 @@
-# Brainstorming: Finn ditt MCP-prosjekt (25 min)
+# Brainstorming: Finn ditt MCP-prosjekt
+
+> **Tips:** Kjør `/mcp-coach` i Claude Code for å få en interaktiv coach som hjelper deg finne ideer og bygge MCP-serveren din steg for steg.
 
 ## Målet
 
