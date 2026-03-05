@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "boliglan-kalkulator": {
+      "command": "node",
+      "args": ["/home/sb1a.sparebank1.no/a501669/git/mcp-workshop/boliglan-kalkulator-mcp/dist/index.js"],
+      "env": {
+        "KALKULATOR_BASE_URL": "http://localhost:8080"
+      }
+    }
+  }
+}
